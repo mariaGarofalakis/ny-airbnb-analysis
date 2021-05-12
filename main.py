@@ -64,6 +64,7 @@ def get_data():
     df_listings = df_listings.sort_values(by='distance')
 
     ##################################  for amenities ##################################################
+    df_listings['count_amenities'] = df_listings.apply(lambda x: len(x['amenities'].split(',')), axis=1)
     df_listings['amenities'] = df_listings.apply(lambda x: x['amenities'].split(','), axis=1)
     regex = re.compile('[^a-zA-Z\d\s]')
     df_listings.amenities = df_listings.amenities.apply(lambda x: [regex.sub('', it) for it in x])
@@ -270,7 +271,7 @@ elif active_tab == "Basic Statistics":
     st.markdown("Given the ratings distribution, we were curious regarding the amount of **amenities** provided in each neighbourhood on average and whether the owners are less concerned about the quality of the apartment if their listing is close to any attraction. Therefore, we visualized the attribute's distribution.")
 
     ##### Amenities distribution
-    df_listings['count_amenities'] = df_listings.apply(lambda x: len(x['amenities'].split(',')), axis=1)
+   # df_listings['count_amenities'] = df_listings.apply(lambda x: len(x['amenities'].split(',')), axis=1)
     df_listings = df_listings.assign(round_amenities=np.ceil(df_listings['count_amenities'] / 5.0) * 5)
 
     df_neigh_amenities = pd.DataFrame()
@@ -306,7 +307,7 @@ elif active_tab == "Data Analysis":
         "On the left site of the panel there is an interactive field where we can select  the neighbourhood and the price range of our disire. "
         "In addition a distribution of prices and user's ratings are shown by the two figures above according to our selections. "
         "In that way we can compare the values of prices between different neighbourhoods and choose the one which is more suitable to our budget "
-        "In order to get a better intution of how the listings are distributing is space we provide a map of NY city where all the selected listings are "
+        "In order to get a better intution of how the listings are distributed is space we provide a map of NY city where all the selected listings are "
         "teamed into clusters.")
     df_listings, df_attractions, df_predictions, facilities = get_data()
 

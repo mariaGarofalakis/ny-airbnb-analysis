@@ -306,9 +306,7 @@ elif active_tab == "Data Analysis":
     st.markdown(
         "On the left site of the panel there is an interactive field where we can select  the neighbourhood and the price range of our disire. "
         "In addition a distribution of prices and user's ratings are shown by the two figures above according to our selections. "
-        "In that way we can compare the values of prices between different neighbourhoods and choose the one which is more suitable to our budget "
-        "In order to get a better intution of how the listings are distributed is space we provide a map of NY city where all the selected listings are "
-        "teamed into clusters.")
+        "In that way we can compare the values of prices between different neighbourhoods and choose the one which is more suitable to our budget ")
     df_listings, df_attractions, df_predictions, facilities = get_data()
 
     neighs = df_listings['neighbourhood'].unique()
@@ -346,11 +344,8 @@ elif active_tab == "Data Analysis":
     st.title('Map of listings for selected neighbourhood')
 
     st.markdown(
-        "On the left site of the panel there is an interactive field where we can select  the neighbourhood and the price range of our disire. "
-        "In addition a distribution of prices and user's ratings are shown by the two figures above according to our selections. "
-        "In that way we can compare the values of prices between different neighbourhoods and choose the one which is more suitable to our budget "
-        "In order to get a better intution of how the listings are distributing is space we provide a map of NY city where all the selected listings are "
-        "teamed into clusters. If you zoom in a specific cluster you can get the exact location of the listing. Also by clicking "
+         "In order to get a better intution of how the listings are distributed is space we provide a map of NY city where all the selected listings are "
+        "teamed together into clusters. If you zoom in a specific cluster you can get the exact location of the listing. Also by clicking "
         "a specific marker a pop up window is showing up, which provides us with informations for the price and the user's ratings for this specific listing. "
         "On the map there are markers with NY city's most significant attractions so as we can relate the distance of the available listings "
         "with those regions of the city with the most interesting places to visit. Finally by clicking the attraction's marker a picture of it shows up "

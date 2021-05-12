@@ -5,6 +5,7 @@ import streamlit as st
 import plotly.graph_objects as go
 import plotly.express as px
 import webbrowser
+from folium.plugins import HeatMap
 import folium
 from streamlit_folium import folium_static
 from folium import IFrame
@@ -143,11 +144,46 @@ st.markdown("<br>", unsafe_allow_html=True)
 
 if active_tab == "Introduction":
     st.header("Is there any connection between NY City's attraction and the Airbnb prices?")
+    st.title('Heatmap of listings prices in NY city')
 
-    #st.map(attr[["latitude", "longitude"]])
+    df_listings, df_attractions, df_predictions, facilities = get_data()
+
+
+    map_hooray = folium.Map([40.730610, -73.935242], zoom_start=11, tiles="OpenStreetMap")
+
+    heatmap = HeatMap(list(
+        zip(df_listings['latitude'], df_listings['longitude'], df_listings["price"])),
+                      min_opacity=0.2,
+                      max_val=df_listings["price"].max(),
+                      radius=15, blur=15,
+                      max_zoom=1)
+
+    heatmap.add_to(map_hooray)
+
+    popup = []
+
+    for i in range(len(png)):
+        encoded = base64.b64encode(open(png[i], 'rb').read()).decode()
+        building_name = df_attractions.Attraction[i]
+        html = building_name
+        html += '<img src="data:image/png[i];base64,{}" width="100" height="100">'.format(encoded)
+        iframe = IFrame(html, width=130, height=150)
+        popup.append(folium.Popup(iframe, max_width=130))
+
+    for i in range(len(png)):
+        folium.Marker([df_attractions.latitude[i], df_attractions.longitude[i]], popup=popup[i],
+                      icon=folium.Icon(color='blue', icon_color='yellow', icon='globe')).add_to(map_hooray)
+
+    # add a marker for every record in the filtered data, use a clustered view
+    marker_cluster = MarkerCluster().add_to(map_hooray)  # create marker clusters
+
+
+    folium_static(map_hooray, width=1000, height=600)
+
+
 
 elif active_tab == "Basic Statistics":
-    df_listings, df_attractions = get_data()
+    df_listings, df_attractions, df_predictions, facilities = get_data()
 
     st.subheader("Distribution of listings per focus neighbourhood")
     st.markdown("Since the unique neighbourhoods are around 90, we decided to plot the distribution of listings only for the **\"20 most close to the attractions\"** neighbourhoods and the **\"20 most distant from the attractions\"** neighbourhoods.")

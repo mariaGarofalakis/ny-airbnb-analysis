@@ -1,5 +1,4 @@
 import base64
-
 import pandas as pd
 import streamlit as st
 import plotly.graph_objects as go
@@ -35,7 +34,7 @@ def haversine(df_attractions, lat2, lon2):
     return c * r
 
 @st.cache
-def get_data():
+def get_data(tab=None):
     df_listings = pd.read_csv("new_york.csv", index_col='Unnamed: 0')
     df_attractions = pd.read_csv("attractions.csv", index_col='Unnamed: 0')
 
@@ -59,28 +58,32 @@ def get_data():
     df_listings = df_listings.dropna(subset=['neighbourhood'])
 
     ################################ count haversine distance from aver attractions #################
-    df_listings['distance'] = df_listings.apply(lambda x: haversine(df_attractions, x['latitude'], x['longitude']), axis=1)
+    df_listings['distance'] = df_listings.apply(lambda x: haversine(df_attractions, x['latitude'], x['longitude']),
+                                                axis=1)
     df_listings = df_listings.sort_values(by='distance')
 
-    ##################################  for amenities ##################################################
-    df_listings['count_amenities'] = df_listings.apply(lambda x: len(x['amenities'].split(',')), axis=1)
-    df_listings['amenities'] = df_listings.apply(lambda x: x['amenities'].split(','), axis=1)
-    regex = re.compile('[^a-zA-Z\d\s]')
-    df_listings.amenities = df_listings.amenities.apply(lambda x: [regex.sub('', it) for it in x])
-    df_predictions = pd.get_dummies(df_listings.amenities.apply(pd.Series).stack()).sum(level=0)
+    if tab == "Predictions":
+        ##################################  for amenities ##################################################
+        df_listings['count_amenities'] = df_listings.apply(lambda x: len(x['amenities'].split(',')), axis=1)
+        df_listings['amenities'] = df_listings.apply(lambda x: x['amenities'].split(','), axis=1)
+        regex = re.compile('[^a-zA-Z\d\s]')
+        df_listings.amenities = df_listings.amenities.apply(lambda x: [regex.sub('', it) for it in x])
+        df_predictions = pd.get_dummies(df_listings.amenities.apply(pd.Series).stack()).sum(level=0)
 
-    k = df_predictions.sum(axis=0, skipna=True)
-    filt_amnities = k[k.values >= 1090].index.tolist()
-    df_predictions = df_predictions.loc[:, df_predictions.columns.isin(filt_amnities)]
+        k = df_predictions.sum(axis=0, skipna=True)
+        filt_amnities = k[k.values >= 1090].index.tolist()
+        df_predictions = df_predictions.loc[:, df_predictions.columns.isin(filt_amnities)]
 
-    df_predictions = df_predictions.drop(
-        columns=['translation missing enhostingamenity49', 'translation missing enhostingamenity50'])
-    facilities = df_predictions.columns.to_list()
-    df_predictions = df_predictions.assign(neighbourhood=df_listings['neighbourhood'])
-    df_predictions = df_predictions.assign(distance=df_listings['distance'])
-    df_predictions = pd.get_dummies(df_predictions, columns=['neighbourhood'], prefix='', prefix_sep='')
+        df_predictions = df_predictions.drop(
+            columns=['translation missing enhostingamenity49', 'translation missing enhostingamenity50'])
+        facilities = df_predictions.columns.to_list()
+        df_predictions = df_predictions.assign(neighbourhood=df_listings['neighbourhood'])
+        df_predictions = df_predictions.assign(distance=df_listings['distance'])
+        df_predictions = pd.get_dummies(df_predictions, columns=['neighbourhood'], prefix='', prefix_sep='')
 
-    return df_listings, df_attractions,df_predictions,facilities
+        return df_listings, df_attractions, df_predictions, facilities
+    else:
+        return df_listings, df_attractions
 
 png = ["sites/statue_of_liberty.PNG",
            "sites/central_park.PNG",
@@ -146,7 +149,7 @@ if active_tab == "Introduction":
     st.header("Is there any connection between NY City's attraction and the Airbnb prices?")
     st.title('Heatmap of listings prices in NY city')
 
-    df_listings, df_attractions, df_predictions, facilities = get_data()
+    df_listings, df_attractions = get_data()
 
     map_hooray = folium.Map([40.730610, -73.935242], zoom_start=11, tiles="OpenStreetMap")
 
@@ -179,7 +182,7 @@ if active_tab == "Introduction":
     folium_static(map_hooray, width=1000, height=600)
 
 elif active_tab == "Basic Statistics":
-    df_listings, df_attractions, df_predictions, facilities = get_data()
+    df_listings, df_attractions = get_data()
 
     st.subheader("Distribution of listings per focus neighbourhood")
     st.markdown("Since the unique neighbourhoods are around 90, we decided to plot the distribution of listings only for the **\"20 most close to the attractions\"** neighbourhoods and the **\"20 most distant from the attractions\"** neighbourhoods.")
@@ -296,7 +299,7 @@ elif active_tab == "Basic Statistics":
     st.markdown("In regards, to the amenities distribution it is worth mentioning that the distribution of the \"closest to the attractions\" neighbourhoods is much more varied than the ones further way and the highest frequencies are around **15-20** amenities. On the other hand, the \"distant from the attractions\" neighbourhoods show a higher number of amenities, around **30-40**.")
 
 elif active_tab == "Data Analysis":
-    df_listings, df_attractions, df_predictions, facilities = get_data()
+    df_listings, df_attractions = get_data()
 
     neighs = df_listings['neighbourhood'].unique()
 
@@ -372,7 +375,7 @@ elif active_tab == "Prediction":
         "for your house according to the demand for the specific neighbourhood and the facilities that you are ofering. "
         "All you have to do is to add the neighbourhood of your choise and ofcourse the amenities you are going to provide.")
 
-    df_listings, df_attractions, df_predictions, facilities = get_data()
+    df_listings, df_attractions, df_predictions, facilities = get_data(tab="Predictions")
     X_test = pd.DataFrame(columns=df_predictions.columns)
     X_test.loc[len(X_test)] = 0
 

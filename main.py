@@ -147,18 +147,15 @@ st.markdown("<br>", unsafe_allow_html=True)
 
 if active_tab == "Introduction":
     st.header("Is there any connection between NY City's attraction and the Airbnb prices?")
-    st.title('Heatmap of listings prices in NY city')
+    st.subheader('How many Airbnb listings are located in NY?')
 
     df_listings, df_attractions = get_data()
+    df_heatmap = df_listings.copy()
+    df_heatmap['count'] = 1
 
     map_hooray = folium.Map([40.730610, -73.935242], zoom_start=11, tiles="OpenStreetMap")
-
-    heatmap = HeatMap(list(
-        zip(df_listings['latitude'], df_listings['longitude'], df_listings["price"])),
-        min_opacity=0.2,
-        max_val=df_listings["price"].max(),
-        radius=15, blur=15,
-        max_zoom=1)
+    heatmap = HeatMap(data=df_heatmap[['latitude', 'longitude', 'count']].groupby(
+        ['latitude', 'longitude']).sum().reset_index().values.tolist(), radius=8, max_zoom=13)
 
     heatmap.add_to(map_hooray)
 
@@ -174,7 +171,7 @@ if active_tab == "Introduction":
 
     for i in range(len(png)):
         folium.Marker([df_attractions.latitude[i], df_attractions.longitude[i]], popup=popup[i],
-                      icon=folium.Icon(color='blue', icon_color='yellow', icon='globe')).add_to(map_hooray)
+                      icon=folium.Icon(color='blue', icon_color='white', icon='globe')).add_to(map_hooray)
 
     # add a marker for every record in the filtered data, use a clustered view
     marker_cluster = MarkerCluster().add_to(map_hooray)  # create marker clusters
@@ -353,7 +350,7 @@ elif active_tab == "Data Analysis":
 
     for i in range(len(png)):
         folium.Marker([df_attractions.latitude[i], df_attractions.longitude[i]], popup=popup[i],
-                      icon=folium.Icon(color='blue', icon_color='yellow', icon='globe')).add_to(map_hooray)
+                      icon=folium.Icon(color='blue', icon_color='white', icon='globe')).add_to(map_hooray)
 
     # add a marker for every record in the filtered data, use a clustered view
     marker_cluster = MarkerCluster().add_to(map_hooray)  # create marker clusters

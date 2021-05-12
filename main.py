@@ -305,10 +305,10 @@ elif active_tab == "Technical Details":
     st.markdown("If you are interested in the technical details, our implementations are available as a Jupyter Notebook.")
     left, right = st.beta_columns([1,3])
     with left:
-        if st.button('iPython Notebook'):
-            html_temp = """<a href="https://colab.research.google.com/drive/1zQPLZkdHfL12qhDBVvIrRM47PVjwrPVd?usp=sharing" target="_blank"> Link </a>"""
-            st.markdown(html_temp, unsafe_allow_html=True)
-            #webbrowser.open_new_tab('https://colab.research.google.com/drive/1zQPLZkdHfL12qhDBVvIrRM47PVjwrPVd?usp=sharing')
+        #if st.button('iPython Notebook'):
+        html_temp = """<button class="btn btn-success" onclick=" window.open('https://colab.research.google.com/drive/1zQPLZkdHfL12qhDBVvIrRM47PVjwrPVd?usp=sharing','_blank')">iPython Notebook</button>"""
+        #html_temp = """<a href="https://colab.research.google.com/drive/1zQPLZkdHfL12qhDBVvIrRM47PVjwrPVd?usp=sharing" target="_blank">Link to our Explainer Notebook</a>"""
+        st.markdown(html_temp, unsafe_allow_html=True)
     with right:
         if st.button('Data'):
             webbrowser.open_new_tab('https://drive.google.com/drive/folders/18WcZMktFQj5W_dAmK7hL-Y8cFGHvwmXH?usp=sharing')

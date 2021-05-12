@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 import webbrowser
 import folium
-from streamlit_folium import folium_static
+#from streamlit_folium import folium_static
 from folium import IFrame
 from folium.plugins import MarkerCluster
 from math import radians, cos, sin, asin, sqrt
@@ -294,8 +294,8 @@ elif active_tab == "Data Analysis":
 
         folium.Marker([row.latitude,row.longitude], radius=5, popup=new_pops,).add_to(marker_cluster)
 
-    folium_static(map_hooray, width=1000, height=600)
-
+    #folium_static(map_hooray, width=1000, height=600)
+    st.markdown(map_hooray._repr_html_(), unsafe_allow_html=True)
 
 
 elif active_tab == "Technical Details":

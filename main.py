@@ -1,14 +1,12 @@
 import base64
 
 import pandas as pd
-import matplotlib.pyplot as plt
 import streamlit as st
 import plotly.graph_objects as go
 import plotly.express as px
 import webbrowser
 import folium
 from streamlit_folium import folium_static
-from folium.plugins import HeatMap
 from folium import IFrame
 from folium.plugins import MarkerCluster
 from math import radians, cos, sin, asin, sqrt

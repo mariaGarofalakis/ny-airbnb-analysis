@@ -88,8 +88,6 @@ html_temp ="""
     </div><br>"""
 st.markdown(html_temp, unsafe_allow_html=True)
 
-df_listings, df_attractions = get_data()
-
 st.markdown(
     '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">',
     unsafe_allow_html=True,
@@ -130,6 +128,7 @@ if active_tab == "Introduction":
     #st.map(attr[["latitude", "longitude"]])
 
 elif active_tab == "Basic Statistics":
+    df_listings, df_attractions = get_data()
 
     st.subheader("Distribution of listings per focus neighbourhood")
     st.markdown("Since the unique neighbourhoods are around 90, we decided to plot the distribution of listings only for the **\"20 most close to the attractions\"** neighbourhoods and the **\"20 most distant from the attractions\"** neighbourhoods.")
@@ -246,6 +245,7 @@ elif active_tab == "Basic Statistics":
     st.markdown("In regards, to the amenities distribution it is worth mentioning that the distribution of the \"closest to the attractions\" neighbourhoods is much more varied than the ones further way and the highest frequencies are around **15-20** amenities. On the other hand, the \"distant from the attractions\" neighbourhoods show a higher number of amenities, around **30-40**.")
 
 elif active_tab == "Data Analysis":
+    df_listings, df_attractions = get_data()
 
     neighs = df_listings['neighbourhood'].unique()
 
@@ -305,14 +305,13 @@ elif active_tab == "Technical Details":
     st.markdown("If you are interested in the technical details, our implementations are available as a Jupyter Notebook.")
     left, right = st.beta_columns([1,3])
     with left:
-        #if st.button('iPython Notebook'):
-        html_temp = """<button class="btn btn-success" onclick=" window.open('https://colab.research.google.com/drive/1zQPLZkdHfL12qhDBVvIrRM47PVjwrPVd?usp=sharing','_blank')">iPython Notebook</button>"""
-        #html_temp = """<a href="https://colab.research.google.com/drive/1zQPLZkdHfL12qhDBVvIrRM47PVjwrPVd?usp=sharing" target="_blank">Link to our Explainer Notebook</a>"""
-        st.markdown(html_temp, unsafe_allow_html=True)
+        if st.button('iPython Notebook'):
+            html_temp = """<a href="https://colab.research.google.com/drive/1zQPLZkdHfL12qhDBVvIrRM47PVjwrPVd?usp=sharing" target="_blank">Link to our Explainer Notebook</a>"""
+            st.markdown(html_temp, unsafe_allow_html=True)
     with right:
         if st.button('Data'):
-            webbrowser.open_new_tab('https://drive.google.com/drive/folders/18WcZMktFQj5W_dAmK7hL-Y8cFGHvwmXH?usp=sharing')
-
+            html_temp = """<a href="https://drive.google.com/drive/folders/18WcZMktFQj5W_dAmK7hL-Y8cFGHvwmXH?usp=sharing" target="_blank">Link to our Data</a>"""
+            st.markdown(html_temp, unsafe_allow_html=True)
     st.markdown(
         "Created for the assignment of 02806 Social data analysis and visualization course offered by the Technical University of Denmark.")
 

@@ -432,7 +432,7 @@ elif active_tab == "Investigation":
     df_clustering = X_test.loc[:, X_test.columns.isin(['price', 'zipcode'])]
 
     kmeans = KMeans(n_clusters=10, random_state=0)
-    clust = X_test[["latitude", "longitude", 'price', 'zipcode']].copy()
+    clust = X_test[["latitude", "longitude", 'price', 'zipcode', 'distance']].copy()
     clust = clust.assign(cluster=kmeans.fit_predict(df_clustering)[:, np.newaxis])
     data = clust.copy()
 

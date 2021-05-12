@@ -372,9 +372,9 @@ elif active_tab == "Data Analysis":
 elif active_tab == "Prediction":
     st.subheader("Prediction of price for a new listing")
     st.markdown(
-        "If you are interested in adding a new listing to RBNB, this tool will help you to find an apropriate price "
-        "for your house according to the demand for the specific neighbourhood and the facilities that you are ofering. "
-        "All you have to do is to add the neighbourhood of your choise and ofcourse the amenities you are going to provide.")
+        "If you are interested in adding a new listing to Airbnb, this tool will help you to find an appropriate price "
+        "for your house according to the demand for the specific neighbourhood and the facilities that you are offering. "
+        "All you have to do is to add the neighbourhood of your choise and the amenities you are planning to provide.")
 
     df_listings, df_attractions, df_predictions, facilities = get_data(tab="Predictions")
     X_test = pd.DataFrame(columns=df_predictions.columns)
@@ -415,38 +415,13 @@ elif active_tab == "Prediction":
 
         folium_static(map_hooray, width=1000, height=600)
 
-elif active_tab == "Technical Details":
-    st.header("Explainer Notebook")
-    st.markdown("If you are interested in the technical details, our implementations are available as a Jupyter Notebook.")
-    left, right = st.beta_columns([1,3])
-    with left:
-        if st.button('iPython Notebook'):
-            html_temp = """<a href="https://colab.research.google.com/drive/1zQPLZkdHfL12qhDBVvIrRM47PVjwrPVd?usp=sharing" target="_blank">Link to our Explainer Notebook</a>"""
-            st.markdown(html_temp, unsafe_allow_html=True)
-    with right:
-        if st.button('Data'):
-            html_temp = """<a href="https://drive.google.com/drive/folders/18WcZMktFQj5W_dAmK7hL-Y8cFGHvwmXH?usp=sharing" target="_blank">Link to our Data</a>"""
-            st.markdown(html_temp, unsafe_allow_html=True)
-    st.markdown(
-        "Created for the assignment of 02806 Social data analysis and visualization course offered by the Technical University of Denmark.")
-
-    html_temp = """
-        <div align="center">
-        <br>
-        <h6 style="text-align:center;">Copyright, 2021</h6>
-        <h6 style="text-align:center;">Electra Zarafeta, Maria Garofalaki, Jorge Sintes</h6>
-        </div><br>"""
-    st.markdown(html_temp, unsafe_allow_html=True)
-
-    st.balloons()
-
 elif active_tab == "Investigation":
-    st.header("Real estate investment")
-    st.markdown("Imagine that you run a real estate buisnes and you want to investigate in RNBN. This aplication gives the "
-                "ability to find the most profitable location for your new house. All you have to do is to study the map bellow "
-                "and click on the specific cluster. That will give you a better intuition of how the prices in different regions of NY city are "
-                "teamed together. In that way we are doing all the hard work of filtering out the regions which have about the same average price and now you "
-                "are ready to look for an appartment  according to your buisnes plan.")
+    st.subheader("Real estate investment")
+    st.markdown("Imagine that you run a real estate business and you want to invest in Airbnb. This application provides the "
+                "ability to find the most profitable location for your new house. All you have to do is to study the map below "
+                "and click on the specific cluster. This will give you a better intuition of how the prices in different regions of NY city are "
+                "grouped together. In that way we are doing all the \"hard\" work of filtering out the regions which have about the same average price and now you "
+                "are ready to focus on a specific area of NY according to your business plan.")
 
     df_listings, df_attractions = get_data()
     df_listings = df_listings.dropna(subset=['zipcode'])
@@ -495,6 +470,31 @@ elif active_tab == "Investigation":
     map_hooray.add_child(macro)
 
     folium_static(map_hooray, width=1000, height=600)
+
+elif active_tab == "Technical Details":
+    st.header("Explainer Notebook")
+    st.markdown("If you are interested in the technical details, our implementations are available as a Jupyter Notebook.")
+    left, right = st.beta_columns([1,3])
+    with left:
+        if st.button('iPython Notebook'):
+            html_temp = """<a href="https://colab.research.google.com/drive/1zQPLZkdHfL12qhDBVvIrRM47PVjwrPVd?usp=sharing" target="_blank">Link to our Explainer Notebook</a>"""
+            st.markdown(html_temp, unsafe_allow_html=True)
+    with right:
+        if st.button('Data'):
+            html_temp = """<a href="https://drive.google.com/drive/folders/18WcZMktFQj5W_dAmK7hL-Y8cFGHvwmXH?usp=sharing" target="_blank">Link to our Data</a>"""
+            st.markdown(html_temp, unsafe_allow_html=True)
+    st.markdown(
+        "Created for the assignment of 02806 Social data analysis and visualization course offered by the Technical University of Denmark.")
+
+    html_temp = """
+        <div align="center">
+        <br>
+        <h6 style="text-align:center;">Copyright, 2021</h6>
+        <h6 style="text-align:center;">Electra Zarafeta, Maria Garofalaki, Jorge Sintes</h6>
+        </div><br>"""
+    st.markdown(html_temp, unsafe_allow_html=True)
+
+    st.balloons()
 
 else:
     st.error("Something has gone terribly wrong.")

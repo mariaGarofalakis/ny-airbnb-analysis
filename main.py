@@ -306,7 +306,7 @@ elif active_tab == "Technical Details":
     left, right = st.beta_columns([1,3])
     with left:
         if st.button('iPython Notebook'):
-            webbrowser.open_new_tab('https://www.streamlit.io/')
+            webbrowser.open_new_tab('https://colab.research.google.com/drive/1zQPLZkdHfL12qhDBVvIrRM47PVjwrPVd?usp=sharing')
     with right:
         if st.button('Data'):
             webbrowser.open_new_tab('https://drive.google.com/drive/folders/18WcZMktFQj5W_dAmK7hL-Y8cFGHvwmXH?usp=sharing')

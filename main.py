@@ -11,6 +11,7 @@ from folium import IFrame
 from folium.plugins import MarkerCluster
 from math import radians, cos, sin, asin, sqrt
 import numpy as np
+import re
 
 
 def haversine(df_attractions, lat2, lon2):
@@ -60,7 +61,24 @@ def get_data():
     df_listings['distance'] = df_listings.apply(lambda x: haversine(df_attractions, x['latitude'], x['longitude']), axis=1)
     df_listings = df_listings.sort_values(by='distance')
 
-    return df_listings, df_attractions
+    ##################################  for amenities ##################################################
+    df_listings['amenities'] = df_listings.apply(lambda x: x['amenities'].split(','), axis=1)
+    regex = re.compile('[^a-zA-Z\d\s]')
+    df_listings.amenities = df_listings.amenities.apply(lambda x: [regex.sub('', it) for it in x])
+    df_predictions = pd.get_dummies(df_listings.amenities.apply(pd.Series).stack()).sum(level=0)
+
+    k = df_predictions.sum(axis=0, skipna=True)
+    filt_amnities = k[k.values >= 1090].index.tolist()
+    df_predictions = df_predictions.loc[:, df_predictions.columns.isin(filt_amnities)]
+
+    df_predictions = df_predictions.drop(
+        columns=['translation missing enhostingamenity49', 'translation missing enhostingamenity50'])
+    facilities = df_predictions.columns.to_list()
+    df_predictions = df_predictions.assign(neighbourhood=df_listings['neighbourhood'])
+    df_predictions = df_predictions.assign(distance=df_listings['distance'])
+    df_predictions = pd.get_dummies(df_predictions, columns=['neighbourhood'])
+
+    return df_listings, df_attractions,df_predictions,facilities
 
 png = ["sites/statue_of_liberty.PNG",
            "sites/central_park.PNG",
@@ -93,7 +111,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 query_params = st.experimental_get_query_params()
-tabs = ["Introduction", "Basic Statistics", "Data Analysis", "Technical Details"]
+tabs = ["Introduction", "Basic Statistics", "Data Analysis", "Predictions", "Technical Details"]
 if "tab" in query_params:
     active_tab = query_params["tab"][0]
 else:
@@ -245,7 +263,15 @@ elif active_tab == "Basic Statistics":
     st.markdown("In regards, to the amenities distribution it is worth mentioning that the distribution of the \"closest to the attractions\" neighbourhoods is much more varied than the ones further way and the highest frequencies are around **15-20** amenities. On the other hand, the \"distant from the attractions\" neighbourhoods show a higher number of amenities, around **30-40**.")
 
 elif active_tab == "Data Analysis":
-    df_listings, df_attractions = get_data()
+
+    st.header("Prices and ratings distributions")
+    st.markdown(
+        "On the left site of the panel there is an interactive field where we can select  the neighbourhood and the price range of our disire. "
+        "In addition a distribution of prices and user's ratings are shown by the two figures above according to our selections. "
+        "In that way we can compare the values of prices between different neighbourhoods and choose the one which is more suitable to our budget "
+        "In order to get a better intution of how the listings are distributing is space we provide a map of NY city where all the selected listings are "
+        "teamed into clusters.")
+    df_listings, df_attractions, df_predictions, facilities = get_data()
 
     neighs = df_listings['neighbourhood'].unique()
 
@@ -279,6 +305,19 @@ elif active_tab == "Data Analysis":
         iframe = IFrame(html, width=130, height=150)
         popup.append(folium.Popup(iframe, max_width=130))
 
+    st.title('Map of listings for selected neighbourhood')
+
+    st.markdown(
+        "On the left site of the panel there is an interactive field where we can select  the neighbourhood and the price range of our disire. "
+        "In addition a distribution of prices and user's ratings are shown by the two figures above according to our selections. "
+        "In that way we can compare the values of prices between different neighbourhoods and choose the one which is more suitable to our budget "
+        "In order to get a better intution of how the listings are distributing is space we provide a map of NY city where all the selected listings are "
+        "teamed into clusters. If you zoom in a specific cluster you can get the exact location of the listing. Also by clicking "
+        "a specific marker a pop up window is showing up, which provides us with informations for the price and the user's ratings for this specific listing. "
+        "On the map there are markers with NY city's most significant attractions so as we can relate the distance of the available listings "
+        "with those regions of the city with the most interesting places to visit. Finally by clicking the attraction's marker a picture of it shows up "
+        "which is a good indication for a new visitor of the city.")
+
     map_hooray = folium.Map([40.730610, -73.935242], zoom_start=11, tiles="OpenStreetMap")
 
     for i in range(len(png)):
@@ -298,6 +337,33 @@ elif active_tab == "Data Analysis":
 
     folium_static(map_hooray, width=1000, height=600)
     #st.markdown(map_hooray._repr_html_(), unsafe_allow_html=True)
+
+
+elif active_tab == "Predictions":
+    st.header("Prediction of price for a new listing")
+    st.markdown("If you are interested in adding a new listing to RBNB, this tool will help you to find an apropriate price "
+                "for your house according to the demand for the specific neighbourhood and the facilities that you are ofering. "
+                "All you have to do is to add the neighbourhood of your choise and ofcourse the amenities you are going to provide.")
+
+    df_listings, df_attractions, df_predictions, facilities = get_data()
+
+    neighs = df_listings['neighbourhood'].unique()
+    rprt_status = st.sidebar.selectbox("Choose Neighbourhood(*)", neighs)
+
+    #st_ms = st.sidebar.multiselect("facilities", df_predictions.columns.tolist(), default=facilities)
+
+    container = st.sidebar.beta_container()
+    all = st.sidebar.checkbox("Select all")
+
+    if all:
+        selected_options = container.multiselect("Select one or more options:",
+                                                 facilities,facilities)
+    else:
+        selected_options = container.multiselect("Select one or more options:",
+                                                 facilities)
+
+
+
 
 
 elif active_tab == "Technical Details":

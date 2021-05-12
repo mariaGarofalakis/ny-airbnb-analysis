@@ -7,10 +7,13 @@ import plotly.express as px
 import folium
 from streamlit_folium import folium_static
 from folium import IFrame
-from folium.plugins import MarkerCluster
+from folium.plugins import MarkerCluster, HeatMap
 from math import radians, cos, sin, asin, sqrt
 import numpy as np
 import re
+from geopy.geocoders import Nominatim
+from sklearn.ensemble import RandomForestRegressor
+from folium.features import DivIcon
 
 def haversine(df_attractions, lat2, lon2):
     """
@@ -75,7 +78,7 @@ def get_data():
     facilities = df_predictions.columns.to_list()
     df_predictions = df_predictions.assign(neighbourhood=df_listings['neighbourhood'])
     df_predictions = df_predictions.assign(distance=df_listings['distance'])
-    df_predictions = pd.get_dummies(df_predictions, columns=['neighbourhood'])
+    df_predictions = pd.get_dummies(df_predictions, columns=['neighbourhood'], prefix='', prefix_sep='')
 
     return df_listings, df_attractions,df_predictions,facilities
 
@@ -363,13 +366,15 @@ elif active_tab == "Data Analysis":
     folium_static(map_hooray, width=1000, height=600)
 
 elif active_tab == "Prediction":
-    st.header("Prediction of price for a new listing")
+    st.subheader("Prediction of price for a new listing")
     st.markdown(
         "If you are interested in adding a new listing to RBNB, this tool will help you to find an apropriate price "
         "for your house according to the demand for the specific neighbourhood and the facilities that you are ofering. "
         "All you have to do is to add the neighbourhood of your choise and ofcourse the amenities you are going to provide.")
 
     df_listings, df_attractions, df_predictions, facilities = get_data()
+    X_test = pd.DataFrame(columns=df_predictions.columns)
+    X_test.loc[len(X_test)] = 0
 
     neighs = df_listings['neighbourhood'].unique()
     rprt_status = st.sidebar.selectbox("Choose Neighbourhood(*)", neighs)
@@ -383,6 +388,28 @@ elif active_tab == "Prediction":
         selected_options = container.multiselect("Select one or more options:",
                                                  facilities)
 
+    if st.button('Predict the price of your new listing'):
+        geolocator = Nominatim(user_agent="electra")
+        location = geolocator.geocode(rprt_status+", New York")
+        X_test.distance = haversine(df_attractions, location.latitude, location.longitude)
+        X_test[selected_options] = 1
+        X_test[rprt_status] = 1
+        model = RandomForestRegressor(max_depth=10, min_samples_leaf=0.1, min_samples_split=0.1, n_estimators=50)
+        model.fit(df_predictions, df_listings.price.to_numpy()[:,np.newaxis])
+        y_pred = model.predict(X_test)
+
+        map_hooray = folium.Map([location.latitude, location.longitude], zoom_start=11, tiles="OpenStreetMap")
+
+        html = "<font color= \"#225d7a\" face = \"Raleway\" size = \"5\"><strong>Price: {}$</strong></font>".format(str(round(y_pred[0])))
+
+        folium.Marker([location.latitude, location.longitude], icon=DivIcon(icon_size=(150,10),
+                            icon_anchor=(60,20), html=html)).add_to(map_hooray)
+        map_hooray.add_child(folium.CircleMarker([location.latitude, location.longitude], radius=80,
+                            color="#428DB2",
+                            fill=True,
+                            fill_color="#428DB2",))
+
+        folium_static(map_hooray, width=1000, height=600)
 
 elif active_tab == "Technical Details":
     st.header("Explainer Notebook")

@@ -13,6 +13,7 @@ from math import radians, cos, sin, asin, sqrt
 import numpy as np
 import re
 
+#
 
 def haversine(df_attractions, lat2, lon2):
     """

@@ -4,10 +4,14 @@ def app():
     st.header("Explainer Notebook")
     st.markdown(
         "If you are interested in the technical details, our implementations are available as a Jupyter Notebook.")
-    left, right = st.beta_columns([1, 3])
+    left, mid, right = st.beta_columns(3)
     with left:
         if st.button('iPython Notebook'):
             html_temp = """<a href="https://colab.research.google.com/drive/1zQPLZkdHfL12qhDBVvIrRM47PVjwrPVd?usp=sharing" target="_blank">Link to our Explainer Notebook</a>"""
+            st.markdown(html_temp, unsafe_allow_html=True)
+    with mid:
+        if st.button('GitHub Repo'):
+            html_temp = """<a href="https://github.com/ElectraZarafeta/ny-airbnb-analysis.git" target="_blank">Link to our GitHub Repo</a>"""
             st.markdown(html_temp, unsafe_allow_html=True)
     with right:
         if st.button('Data'):

@@ -34,6 +34,8 @@ def app(df_listings, df_attractions):
     data["color"] = data['cluster'].apply(lambda x:
                                           lst_colors[lst_elements.index(x)])
 
+    x = clust.groupby(["cluster"]).mean('price')
+
     ## create size column (scaled)
     scaler = MinMaxScaler(feature_range=(6, 25))
     data["size"] = scaler.fit_transform(clust['price'].values.reshape(-1, 1)).reshape(-1)
@@ -49,11 +51,11 @@ def app(df_listings, df_attractions):
         radius=row["size"]).add_to(map_hooray), axis=1)
 
     ## add html legend
-    legend_html = """{% macro html(this, kwargs) %} <div style="position:fixed; bottom:10px; left:10px; border:2px solid black; z-index:9999; font-size:14px;">&nbsp;<b>""" + 'cluster' + """:</b><br>"""
+    legend_html = """{% macro html(this, kwargs) %} <div style="position:fixed; bottom:10px; left:10px; border:2px solid black; z-index:9999; font-size:14px;">&nbsp;<b>""" + 'cluster - average price' + """:</b><br>"""
     for i in lst_elements:
         legend_html = legend_html + """&nbsp;<i class="fa fa-circle 
          fa-1x" style="color:""" + lst_colors[lst_elements.index(i)] + """">
-         </i>&nbsp;""" + str(i) + """<br>"""
+         </i>&nbsp;""" + str(i) + """: """ + str(round(x.iloc[i]['price'])) + """<br>"""
     legend_html = legend_html + """</div> {% endmacro %}"""
 
     macro = MacroElement()

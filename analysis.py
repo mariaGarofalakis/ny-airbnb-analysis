@@ -40,8 +40,8 @@ def app(df_listings, df_attractions):
 
     ################################ streamlit ######################################################
     rprt_status = st.sidebar.selectbox("Choose Neighbourhood(*)", neighs)
-    minimum = st.sidebar.number_input("Minimum Price", min_value=5, step=50)
-    maximum = st.sidebar.number_input("Maximum Price", min_value=5, value=3000, step=50)
+    minimum = st.sidebar.number_input("Minimum Price (Starting from: 5$)", min_value=5, max_value=10000, value=300, step=50)
+    maximum = st.sidebar.number_input("Maximum Price (Up to: 10000$)", min_value=5, max_value=10000, value=700, step=50)
     if minimum > maximum:
         st.error("Please enter a valid range")
     st.sidebar.write("(*) The neighbourhoods are sorted based on their distance from the tourist attractions")

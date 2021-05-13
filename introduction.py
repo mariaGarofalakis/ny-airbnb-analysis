@@ -32,7 +32,7 @@ def app(df_listings, df_attractions):
 
     st.markdown("This website will provide you with an easy and fun search on the available Airbnb accommodation in New York City. "
     "We know that in a city as big and expensive as New York, finding a suitable apartment can be a daunting task. "
-    "You can find interactive tools that illustrate the variation of the values of the key fields \(such as price, ratings, etc.\).")
+    "You can find interactive tools that illustrate the variation of the values of the key fields \(such as price, ratings, etc.\). ")
 
     df_heatmap = df_listings.copy()
     df_heatmap['count'] = 1

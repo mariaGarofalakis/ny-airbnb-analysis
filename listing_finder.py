@@ -30,7 +30,7 @@ def app(df_listings, df_attractions):
     st.sidebar.title('Selection')
     
     neighs = df_listings['neighbourhood'].unique()
-    neighs = np.concatenate([['Radius'], neighs])
+    neighs = np.concatenate([['Radius from the attractions'], neighs])
     
     queries = ['Lowest price', 'Highest score', 'Highest response rate', 'Popularity']
     parameters = ['price', 'review_scores_rating', 'host_response_rate', 'reviews_per_month']
@@ -39,9 +39,9 @@ def app(df_listings, df_attractions):
     lat_mean = df_attractions.latitude.mean()
     lon_mean = df_attractions.longitude.mean()
     
-    rprt_status = st.sidebar.selectbox("Choose Neighbourhood or Radius", neighs)
+    rprt_status = st.sidebar.selectbox("Choose Radius or Neighbourhood", neighs)
     
-    if rprt_status == 'Radius':
+    if rprt_status == 'Radius from the attractions':
         radius = st.sidebar.slider("Select a radius (km)", min_value=0.25, max_value=10.0, value=2.0, step=0.25)
         filtered_data = df_listings[df_listings['distance'] < radius]
     else:
@@ -65,7 +65,7 @@ def app(df_listings, df_attractions):
     st.markdown(
         "In order to facilitate the task of finding a listing, we've created this tool so that users can search for a listing based on their different preferences. "
         "On the left side of the panel, the user can select the neighbourhood they're insterested in, or select a radius in km from the center of NY's main attractions. "
-        "By default, the finder will show all the listings situated in the area selected. The user can then select a query to show a number (from 1 to 50) of listings that satisfy his/her requirements. ")
+        "By default, the finder will show all the listings situated in the area selected. The user can then select a query to show a number (from 1 to 50) of listings that satisfy his/her requirements.   ")
 
     st.markdown("_Note: the order of the queries matters. The first query will be prioritised before the second and so on._"
         )
@@ -85,7 +85,7 @@ def app(df_listings, df_attractions):
         folium.Marker([df_attractions.latitude[i], df_attractions.longitude[i]], popup=popup[i],
                       icon=folium.Icon(color='blue', icon_color='white', icon='globe')).add_to(map_hooray)
     
-    if rprt_status == 'Radius':
+    if rprt_status == 'Radius from the attractions':
         folium.Circle(
             radius=radius*1000,
             location=[lat_mean, lon_mean],

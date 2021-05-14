@@ -113,7 +113,7 @@ df_neigh_amenities['round_amenities'] = df_neigh_amenities['round_amenities'].as
 df_neigh_amenities['round_amenities'] = df_neigh_amenities['round_amenities'].astype(str)
 
 
-
+## dataframe for prediction
 k = df_predictions.sum(axis=0, skipna=True)
 filt_amnities = k[k.values >= 1090].index.tolist()
 df_predictions = df_predictions.loc[:, df_predictions.columns.isin(filt_amnities)]
@@ -125,11 +125,13 @@ df_predictions = df_predictions.assign(neighbourhood=df_listings['neighbourhood'
 df_predictions = df_predictions.assign(distance=df_listings['distance'])
 df_predictions = pd.get_dummies(df_predictions, columns=['neighbourhood'], prefix='', prefix_sep='')
 
+# dataframe for clustering
 df_clust = df_listings.copy()
 df_clust = df_clust.dropna(subset=['zipcode'])
 df_clust.zipcode = df_clust.zipcode.apply(lambda x: int(re.findall('([0-9.]+)', str(x))[0]))
 df_clust = df_clust.assign(price=np.ceil(df_clust['price'] / 50.0) * 50)
 
+# save csv files
 df_listings.to_csv('csv_files/df_listings.csv')
 df_attractions.to_csv('csv_files/df_attractions.csv')
 df_count.to_csv('csv_files/df_count.csv')

@@ -24,7 +24,7 @@ def app():
             <div align="center">
             <br>
             <h6 style="text-align:center;">Copyright, 2021</h6>
-            <h6 style="text-align:center;">Electra Zarafeta, Maria Garofalaki</h6>
+            <h6 style="text-align:center;">Electra Zarafeta, Maria Garofalaki, Jorge Sintes</h6>
             </div><br>"""
     st.markdown(html_temp, unsafe_allow_html=True)
 

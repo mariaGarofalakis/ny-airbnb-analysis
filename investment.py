@@ -6,9 +6,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from streamlit_folium import folium_static
 import numpy as np
-import re
 
-def app(df_listings, df_attractions):
+def app(df_clust):
     st.subheader("Real estate investment")
     st.markdown("Imagine that you run a real estate business and you want to invest in Airbnb. This application provides the "
                 "ability to find the most profitable location for your new house. All you have to do is to study the map below "
@@ -16,11 +15,8 @@ def app(df_listings, df_attractions):
                 "grouped together. In that way we are doing all the \"hard\" work of filtering out the regions which have about the same average price and now you "
                 "are ready to focus on a specific area of NY according to your business plan.")
 
-    df_listings = df_listings.dropna(subset=['zipcode'])
-    df_listings.zipcode = df_listings.zipcode.apply(lambda x: int(re.findall('([0-9.]+)', str(x))[0]))
-    df_listings = df_listings.assign(price=np.ceil(df_listings['price'] / 50.0) * 50)
 
-    X_train, X_test, = train_test_split(df_listings, test_size=0.05)
+    X_train, X_test, = train_test_split(df_clust, test_size=0.05)
     df_clustering = X_test.loc[:, X_test.columns.isin(['price', 'zipcode'])]
 
     kmeans = KMeans(n_clusters=10, random_state=0)

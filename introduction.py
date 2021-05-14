@@ -3,7 +3,7 @@ import streamlit as st
 import folium
 from streamlit_folium import folium_static
 from folium import IFrame
-from folium.plugins import MarkerCluster, HeatMap
+from folium.plugins import HeatMap
 
 
 png = ["sites/statue_of_liberty.PNG",

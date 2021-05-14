@@ -30,13 +30,18 @@ def app(df_listings, df_attractions):
             <div><font color=\"#C8C8C8\" size=\"6\">How many Airbnb listings are located in NY?</font></div>"""
     st.markdown(html_temp, unsafe_allow_html=True)
 
-    st.markdown("This website will provide you with an easy and fun search on the available Airbnb accommodation in New York City. "
+    st.markdown("This website will provide you an easy and fun set of visualizations and tools to search on the different available Airbnb accommodations in New York City. "
     "We know that in a city as big and expensive as New York, finding a suitable apartment can be a daunting task. "
-    "You can find interactive tools that illustrate the variation of the values of the key fields \(such as price, ratings, etc.\). ")
+    "In the left menu you can find different interactive tools that illustrate geographically the variation of the different listings characteristics \(such as price, ratings, etc.\), "
+    "as well as some other helpful apps.")
 
     df_heatmap = df_listings.copy()
     df_heatmap['count'] = 1
-
+    
+    html_temp = """
+            <div><font color=\"#C8C8C8\" size=\"6\">Heat Map of NY's Airbnb listings</font></div>"""
+    st.markdown(html_temp, unsafe_allow_html=True)
+    
     map_hooray = folium.Map([40.730610, -73.935242], zoom_start=11, tiles="OpenStreetMap")
     heatmap = HeatMap(data=df_heatmap[['latitude', 'longitude', 'count']].groupby(
         ['latitude', 'longitude']).sum().reset_index().values.tolist(), radius=8, max_zoom=13)

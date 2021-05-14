@@ -33,7 +33,7 @@ PAGES = {
     "Basic Statistics": statistics,
     "Data Analysis": analysis,
     "Listing Finder": listing_finder,
-    "Prediction": prediction,
+    "Price Predictor": prediction,
     "Investment": investment,
     "Technical Details": details
 }

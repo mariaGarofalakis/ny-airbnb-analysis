@@ -63,8 +63,8 @@ def app(df_listings, df_attractions):
     
     st.subheader("Listing Finder")
     st.markdown(
-        "In order to facilitate the task of finding a listing, we've created this tool so that users can search for a listing based on their different preferences. "
-        "On the left side of the panel, the user can select the neighbourhood they're insterested in, or select a radius in km from the center of NY's main attractions. "
+        "In order to facilitate the task of finding a listing, we've created this tool will allow users to search for a listing based on their different preferences. "
+        "On the left side of the panel, you can select the neighbourhood you're insterested in, or select a radius in km from the center of NY's main attractions. "
         "By default, the finder will show all the listings situated in the area selected. The user can then select a query to show a number (from 1 to 50) of listings that satisfy his/her requirements.   ")
 
     st.markdown("_Note: the order of the queries matters. The first query will be prioritised before the second and so on._"

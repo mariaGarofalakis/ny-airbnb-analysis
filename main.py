@@ -6,15 +6,15 @@ import introduction, analysis, details, investment, prediction, statistics
 
 @st.cache(allow_output_mutation=True)
 def get_data():
-    df_listings = pd.read_csv("df_listings.csv", index_col='Unnamed: 0')
-    df_attractions = pd.read_csv("df_attractions.csv", index_col='Unnamed: 0')
-    df_predictions = pd.read_csv("df_predictions.csv", index_col='Unnamed: 0')
-    df_clust = pd.read_csv("df_clust.csv", index_col='Unnamed: 0')
-    facilities = pd.read_csv("facilities.csv", index_col='Unnamed: 0')
-    df_count = pd.read_csv("df_count.csv", index_col='Unnamed: 0')
-    df_neigh_price = pd.read_csv("df_neigh_price.csv", index_col='Unnamed: 0')
-    df_neigh_rating = pd.read_csv("df_neigh_rating.csv", index_col='Unnamed: 0')
-    df_neigh_amenities = pd.read_csv("df_neigh_amenities.csv", index_col='Unnamed: 0')
+    df_listings = pd.read_csv("csv_files/df_listings.csv", index_col='Unnamed: 0')
+    df_attractions = pd.read_csv("csv_files/df_attractions.csv", index_col='Unnamed: 0')
+    df_predictions = pd.read_csv("csv_files/df_predictions.csv", index_col='Unnamed: 0')
+    df_clust = pd.read_csv("csv_files/df_clust.csv", index_col='Unnamed: 0')
+    facilities = pd.read_csv("csv_files/facilities.csv", index_col='Unnamed: 0')
+    df_count = pd.read_csv("csv_files/df_count.csv", index_col='Unnamed: 0')
+    df_neigh_price = pd.read_csv("csv_files/df_neigh_price.csv", index_col='Unnamed: 0')
+    df_neigh_rating = pd.read_csv("csv_files/df_neigh_rating.csv", index_col='Unnamed: 0')
+    df_neigh_amenities = pd.read_csv("csv_files/df_neigh_amenities.csv", index_col='Unnamed: 0')
 
     return df_listings, df_attractions, df_predictions, df_clust, facilities['0'].values.tolist(), df_count, df_neigh_price, df_neigh_rating, df_neigh_amenities
 

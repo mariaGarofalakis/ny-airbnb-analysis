@@ -45,10 +45,10 @@ def app(df_listings, df_attractions, df_predictions, facilities):
     all = st.sidebar.checkbox("Select all")
 
     if all:
-        selected_options = container.multiselect("Select one or more options:",
+        selected_options = container.multiselect("Select one or more amenities:",
                                                  facilities, facilities)
     else:
-        selected_options = container.multiselect("Select one or more options:",
+        selected_options = container.multiselect("Select one or more amenities:",
                                                  facilities)
 
     if st.button('Predict the price of your new listing'):

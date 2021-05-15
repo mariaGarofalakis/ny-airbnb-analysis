@@ -2,7 +2,7 @@ import pandas as pd
 import streamlit as st
 from math import radians, cos, sin, asin, sqrt
 import re
-import introduction, analysis, details, investment, prediction, statistics
+import introduction, analysis, listing_finder, details, investment, prediction, statistics
 
 @st.cache(allow_output_mutation=True)
 def get_data():
@@ -32,7 +32,8 @@ PAGES = {
     "Introduction": introduction,
     "Basic Statistics": statistics,
     "Data Analysis": analysis,
-    "Prediction": prediction,
+    "Listing Finder": listing_finder,
+    "Price Predictor": prediction,
     "Investment": investment,
     "Technical Details": details
 }

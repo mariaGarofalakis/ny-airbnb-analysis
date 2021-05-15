@@ -19,11 +19,24 @@ def app(df_listings, df_count, df_neigh_price, df_neigh_rating, df_neigh_ameniti
     fig.update_traces(marker_color='#428DB2', marker_line_color='#428DB2',
                       marker_line_width=1.5, opacity=0.8)
     st.plotly_chart(fig)
-
-    st.subheader("Distribution of Prices per Neighbourhood")
     st.markdown(
-        "As can be seen the difference in the number of listings between the **Manhattan** area and the rest is huge. It seems that our initial assumption was correct and more central neighbourhoods have a higher proportion of apartments in Airbnb.")
-
+        "It can be seen that the difference in the number of listings between the **Manhattan** area and the rest is huge. The reason behind this imbalance can be easily spotted when looking at any of the included maps. Several listings all over the island of Manhattan have been classified with this label instead of the real neighbourhood. As it messes up the scale for the plot, Manhattan has been removed for the following visualization.")
+    
+    df_count_man = df_count[df_count['neighbourhood'] != 'Manhattan']
+    
+    ### listings distribution
+    fig = px.bar(df_count_man, x='neighbourhood', y='count')
+    fig.update_layout(autosize=False, width=1400, height=500, xaxis_title="Focus Neighbourhoods",
+                      yaxis_title="Number of Listings")
+    fig.update_traces(marker_color='#428DB2', marker_line_color='#428DB2',
+                      marker_line_width=1.5, opacity=0.8)
+    st.plotly_chart(fig)
+    
+    st.markdown(
+        "Here, we can observe that most of the listings are situated in the south part of the island of Manhattan, that is, the one closest to NY's most famous attractions. Moreover, by looking at the maps, we can observe that most of the listing categorised as 'Manhattan' (a large portion of the data-set) are also mostly situated in the south part of the island, making the imbalance even greater.")
+    
+    st.subheader("Distribution of Prices per Neighbourhood")
+    
     ### price distribution
     bar = []
 
@@ -37,10 +50,12 @@ def app(df_listings, df_count, df_neigh_price, df_neigh_rating, df_neigh_ameniti
                       yaxis_title="Relative Frequency")
     st.plotly_chart(fig)
 
-    st.subheader("Distribution of Ratings per Neighbourhood")
     st.markdown(
         "As can be seen in the above figure, neighbourhoods which are more distant from the attractions tend to have listings with lower prices (Price: 100 or 200 with frequency 1), such as **The Rockaways**, **Jamaica**, **Bayside**, etc. Moreover, we wanted to investigate if there was a similar behavior in the distribution of **ratings**.")
 
+
+    st.subheader("Distribution of Ratings per Neighbourhood")
+    
     ### rating distribution
     bar = []
 

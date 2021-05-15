@@ -45,6 +45,14 @@ df_listings = df_listings[df_listings['review_scores_rating'] > 0]
 # remove listings with NaN value at neighbourhood column
 df_listings = df_listings.dropna(subset=['neighbourhood'])
 
+# remove special characters from host_response_rate and listings with NaN value
+df_listings = df_listings.dropna(subset=['host_response_rate'])
+df_listings['host_response_rate'] = df_listings.host_response_rate.replace(to_replace='%', value='',
+                                                                       regex=True)
+df_listings['host_response_rate'] = pd.to_numeric(df_listings['host_response_rate'], errors='coerce')
+df_listings = df_listings[df_listings['host_response_rate'] > 0]
+
+
 ################################ count haversine distance from aver attractions #################
 df_listings['distance'] = df_listings.apply(lambda x: haversine(df_attractions, x['latitude'], x['longitude']),
                                             axis=1)

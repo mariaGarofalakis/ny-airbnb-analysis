@@ -33,7 +33,7 @@ def app(df_listings, df_attractions):
     st.markdown(
         "On the left side of the panel there is an interactive field where we can select  the neighbourhood and the price range of our disire. "
         "In addition a distribution of prices and user's ratings are shown by the two figures above according to our selections. "
-        "In that way we can compare the values of prices between different neighbourhoods and choose the one which is more suitable to our budget ")
+        "In that way we can compare the values of prices between different neighbourhoods and choose the one which is more suitable to our budget. ")
 
     ###################### round prices #############################
     df_listings = df_listings.assign(round_price=np.ceil(df_listings['price'] / 50.0) * 50)
